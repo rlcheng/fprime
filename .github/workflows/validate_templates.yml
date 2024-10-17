@@ -1,0 +1,30 @@
+name: validate_templates-actions
+run-name: ${{ github.actor }} running Validate Templates CI actions
+on: [push]
+
+
+jobs:
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: "Checkout F' Repository"
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+          path: ${{ inputs.fprime_location }}
+      #- name: "Fprime Venv and Requirements Install"
+      #  run: |
+      #       python3 -m venv ./fprime-venv
+      #       . ./fprime-venv/bin/activate
+      #       pip3 install -r ${{ inputs.fprime_location }}./requirements.txt
+      - name: "Test boostrap"
+        run: |
+             pip install fprime-bootstrap
+             fprime-bootstrap project
+             cd project
+             fprime-util new --deployment
+             cd deployment
+             fprime-util generate
+             fprime-util build
